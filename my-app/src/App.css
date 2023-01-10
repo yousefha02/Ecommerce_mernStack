@@ -1,0 +1,28 @@
+body{
+  padding: 0;
+  margin: 0;
+}
+*{
+  font-family: 'Roboto', sans-serif !important;
+}
+
+a{
+  text-decoration: none;
+  color: inherit;
+}
+
+main{
+  width: 100%;
+}
+
+.swiper-pagination-bullet-active{
+  background-color: #ff5252 !important;
+}
+
+.arrivalSwiper .swiper-wrapper{
+  margin-bottom: 60px;
+}
+.arrivalSwiper .swiper-pagination-bullet{
+  width: 10px !important;
+  height: 10px !important;
+}

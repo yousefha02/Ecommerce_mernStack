@@ -1,0 +1,1 @@
+const User = new Product('../model/user.js')
