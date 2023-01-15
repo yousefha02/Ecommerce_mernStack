@@ -1,7 +1,7 @@
 import { Box ,Button,styled, Typography} from '@mui/material'
 import React from 'react'
-import slide1 from '../images/slider1.jpeg'
-import slide2 from '../images/slider2.jpeg'
+import slide1 from '../images/ten-signs-you-have-too-many-clothes.jpg'
+import slide2 from '../images/definingdresscodeswhattowearforeveryoccasion.jpg'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
 import "swiper/css";
@@ -14,7 +14,7 @@ const Wrapper = styled(Box)({
 })
 
 const BoxText = styled(Box)({
-    backgroundColor:"#00000061",
+    backgroundColor:"#000000d9",
     width:"fit-content",
     position:"absolute",
     bottom:"30%",

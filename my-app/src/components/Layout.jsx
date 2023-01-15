@@ -15,6 +15,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
+import {useSelector,useDispatch} from 'react-redux'
+import {closeUser} from '../redux/user'
 
 const drawerWidth = 240;
 const navItems = [
@@ -22,6 +24,8 @@ const navItems = [
 ];
 
 function Layout(props) {
+    const dispatch = useDispatch()
+    const {user} = useSelector((state)=>state.userLogin)
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -29,12 +33,18 @@ function Layout(props) {
         setMobileOpen((prevState) => !prevState);
     };
 
+    function handleLogout()
+    {
+        dispatch(closeUser())
+    }
+
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
         <Typography variant="h6" sx={{ my: 2 }}>
             Store
         </Typography>
         <Divider />
+        {user?
         <List>
             {navItems.map((item) => (
             <Link to={item.url}>
@@ -45,7 +55,29 @@ function Layout(props) {
                 </ListItem>
             </Link>
             ))}
+            <ListItem disablePadding onClick={handleLogout}>
+                <ListItemButton sx={{ textAlign: 'center' }}>
+                    <ListItemText primary={'Logout'} />
+                </ListItemButton>
+            </ListItem>
         </List>
+        :
+        <List>
+            <Link to={'/login'}>
+                <ListItem disablePadding>
+                    <ListItemButton sx={{ textAlign: 'center' }}>
+                    <ListItemText primary='Login'/>
+                    </ListItemButton>
+                </ListItem>
+            </Link>
+            <Link to={'/register'}>
+                <ListItem disablePadding>
+                    <ListItemButton sx={{ textAlign: 'center' }}>
+                    <ListItemText primary='Register'/>
+                    </ListItemButton>
+                </ListItem>
+            </Link>
+        </List>}
         </Box>
     );
 
@@ -73,6 +105,9 @@ function Layout(props) {
                 Store
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                {
+                user?   
+                <>
                 {navItems.map((item) => (
                 <Link to={item.url}>
                     <Button key={item} sx={{ color: 'black' }}>
@@ -80,6 +115,24 @@ function Layout(props) {
                     </Button>
                 </Link>
                 ))}
+                <Button sx={{ color: 'black' }} onClick={handleLogout}>
+                    Logout
+                </Button>
+                </>
+                :
+                <>
+                <Link to={'/login'}>
+                    <Button sx={{ color: 'black' }}>
+                        Login
+                    </Button>
+                </Link>
+                <Link to={'/register'}>
+                    <Button sx={{ color: 'black' }}>
+                        Register
+                    </Button>
+                </Link>
+                </>
+                }
             </Box>
             </Toolbar>
         </AppBar>

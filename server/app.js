@@ -14,7 +14,7 @@ const fileStorage = multer.diskStorage({
     }
 })
 
-app.use(multer({storage:fileStorage}).single('file'));
+app.use(multer({storage:fileStorage}).single('image'));
 app.use('/images', express.static(path.join(__dirname,'images')));
 
 app.use((req,res,next)=>
@@ -30,13 +30,16 @@ app.use((req,res,next)=>
 })
 
 const product = require('./routes/product')
-app.use(product)
+app.use('/product',product)
 
 const auth = require('./routes/auth')
 app.use('/auth',auth)
 
 const department = require('./routes/department')
 app.use('/department',department)
+
+const category = require('./routes/category')
+app.use('/category',category)
 
 app.use((error,req,res,next)=>
 {

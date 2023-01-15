@@ -23,15 +23,28 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import {Link} from 'react-router-dom'
 import { Button } from '@mui/material';
+import CategoryIcon from '@mui/icons-material/Category';
+import AddCardIcon from '@mui/icons-material/AddCard';
+import {logout} from '../redux/user'
+import {useDispatch} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
 const drawerWidth = 240;
 
 function ResponsiveDrawer(props) {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+
+    function handlelogout()
+    {
+        dispatch(logout())
+        navigate('/login')
+    }
 
     const drawer = (
         <div>
@@ -48,7 +61,7 @@ function ResponsiveDrawer(props) {
                     </ListItemButton>
                 </ListItem>
             </Link>
-            <Link to="">
+            <Link to="/departments">
                 <ListItem disablePadding>
                     <ListItemButton>
                     <ListItemIcon>
@@ -68,7 +81,27 @@ function ResponsiveDrawer(props) {
                     </ListItemButton>
                 </ListItem>
             </Link>
-            <Link to="">
+            <Link to="/categories">
+                <ListItem disablePadding>
+                    <ListItemButton>
+                    <ListItemIcon>
+                        <CategoryIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={"Categories"} />
+                    </ListItemButton>
+                </ListItem>
+            </Link>
+            <Link to="/add-category">
+                <ListItem disablePadding>
+                    <ListItemButton>
+                    <ListItemIcon>
+                        <AddCardIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={"Add Category"} />
+                    </ListItemButton>
+                </ListItem>
+            </Link>
+            <Link to="/products">
                 <ListItem disablePadding>
                     <ListItemButton>
                     <ListItemIcon>
@@ -140,7 +173,7 @@ function ResponsiveDrawer(props) {
                 Admin
             </Typography>
             <Box sx={{flex:1,display:"flex",justifyContent:"end"}}>
-                <Button>Logout</Button>
+                <Button onClick={handlelogout}>Logout</Button>
             </Box>
             </Toolbar>
         </AppBar>

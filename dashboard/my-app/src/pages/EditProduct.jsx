@@ -4,7 +4,7 @@ import {Box, Paper, TextField, Typography, FormControlLabel,Chip, Checkbox, Form
 ,Select,OutlinedInput,MenuItem} from '@mui/material'
 import { useTheme } from '@mui/material/styles';
 import { useState,useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import {useSelector} from 'react-redux'
 import { useSnackbar } from 'notistack';
 const Input = styled("input")({})
@@ -14,13 +14,15 @@ const Image = styled('img')({
     borderRadius:"8px"
 })
 
-export default function AddProduct() {
-    const navigate = useNavigate()
+export default function EditProduct() {
+    const navigate = useNavigate() 
     const {closeSnackbar,enqueueSnackbar} = useSnackbar()
     const {token} = useSelector((state)=>state.admin)
     const theme = useTheme();
     const [load,setLoad] = useState(false)
     const [colors, setColors] = useState([]);
+    const {productId} = useParams()
+    const [image,setImage] = useState(null)
     
     /** desing and handle with colors input */
     function getStyles(name, personName, theme) {
@@ -51,10 +53,9 @@ export default function AddProduct() {
     },
     };
 
-    const [categories,setCategories] = useState([])
     const names = ['Red','Blue','Green','Yellow','Black','White','Brown','Gray','Pink','Orange'];
     const [sizes,setSizes] = useState([])
-    const [product,setProduct] = useState({image:"",price:"",title:"",categoryId:""})
+    const [product,setProduct] = useState({image:"",price:"",title:""})
 
     const handleChangeProduct = (e)=>
     {
@@ -77,31 +78,38 @@ export default function AddProduct() {
 
     useEffect(()=>
     {
-        async function getCategoreis()
+        async function getProduct()
         {
             try{
-                const response = await fetch(`${process.env.REACT_APP_API}category/all`,{
+                const response = await fetch(`${process.env.REACT_APP_API}product/${productId}`,{
                     headers:{
                         "Authorization":token,
                     }
                 })
                 const data = await response.json()
-                setCategories(data.Categories)
+                setProduct(data.product)
+                setColors(data.product.colors)
+                setSizes(data.product.sizes)
+                setProduct(back=>
+                    {
+                        return {...back,image:data.product.image,price:data.product.price,title:data.product.title}
+                    })
+                setLoad(false)
             }
             catch(err)
             {
                 console.log(err)
             }
         }
-        getCategoreis()
-    },[])
+        getProduct()
+    },[productId])
 
-    async function createProduct(e)
+    async function editProduct(e)
     {
         closeSnackbar()
         e.preventDefault()
         const formData = new FormData()
-        formData.append('image',product.image)
+        formData.append('image',image)
         formData.append('title',product.title)
         formData.append('price',product.price)
         formData.append('colors',colors)
@@ -109,8 +117,8 @@ export default function AddProduct() {
         formData.append('sizes',sizes)
         try{
             setLoad(true)
-            const response = await fetch(`${process.env.REACT_APP_API}product/create`,{
-                method:"POST",
+            const response = await fetch(`${process.env.REACT_APP_API}product/${productId}`,{
+                method:"PUT",
                 headers:{
                     "Authorization":token,
                 },
@@ -123,8 +131,8 @@ export default function AddProduct() {
                 enqueueSnackbar(data.message,{variant:"error",autoHideDuration:2500})
                 throw new Error('failed occured')
             }
-            enqueueSnackbar('product has created',{variant:"success",autoHideDuration:2500})
             navigate('/products')
+            enqueueSnackbar('product has updated',{variant:"success",autoHideDuration:2500})
         }
         catch(err)
         {
@@ -135,12 +143,12 @@ export default function AddProduct() {
     return (
         <Layout>
             <Box sx={{maxWidth:"100%",width:{md:"550px"},marginTop:"30px",marginBottom:"40px"}}>
-                <Typography sx={{fontSize:"22px",fontWeight:"600",marginBottom:"10px"}}>Add Product</Typography>
+                <Typography sx={{fontSize:"22px",fontWeight:"600",marginBottom:"10px"}}>Edit Product</Typography>
                 <Paper sx={{padding:"16px 12px"}}>
                     <TextField label="Title" fullWidth type="text" sx={{marginBottom:"20px"}} name="title"
-                    onChange={(e)=>handleChangeProduct(e)} required/>
+                    onChange={(e)=>handleChangeProduct(e)} required value={product.title}/>
                     <TextField label="Price" fullWidth type="number" sx={{marginBottom:"20px"}} name="price"
-                    onChange={(e)=>handleChangeProduct(e)} required/>
+                    onChange={(e)=>handleChangeProduct(e)} required value={product.price}/>
                     <FormControl sx={{marginBottom:"14px"}} fullWidth>
                         <InputLabel id="demo-multiple-chip-label">Color</InputLabel>
                         <Select
@@ -173,40 +181,23 @@ export default function AddProduct() {
                     <Box sx={{display:'flex',flexDirection:"column",marginBottom:"15px"}}>
                         <FormLabel>Size : </FormLabel>
                         <Box>
-                            <FormControlLabel control={<Checkbox name="xl" onChange={handleChangeSizes}/>} label="XL" />
-                            <FormControlLabel control={<Checkbox name="l" onChange={handleChangeSizes}/>} label="L" />
-                            <FormControlLabel control={<Checkbox name="m" onChange={handleChangeSizes}/>} label="M" />
-                            <FormControlLabel control={<Checkbox name="s" onChange={handleChangeSizes}/>} label="S" />
+                            <FormControlLabel control={<Checkbox name="xl" checked={sizes.includes('xl')} onChange={handleChangeSizes}/>} label="XL" />
+                            <FormControlLabel control={<Checkbox name="l" checked={sizes.includes('l')} onChange={handleChangeSizes}/>} label="L" />
+                            <FormControlLabel control={<Checkbox name="m" checked={sizes.includes('m')} onChange={handleChangeSizes}/>} label="M" />
+                            <FormControlLabel control={<Checkbox name="s" checked={sizes.includes('s')} onChange={handleChangeSizes}/>} label="S" />
                         </Box>
                     </Box>
-                    <FormControl fullWidth sx={{marginBottom:"14px"}}>
-                        <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                        <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={product.categoryId}
-                        label="Department"
-                        onChange={(e)=>handleChangeProduct(e)}
-                        name="categoryId"
-                        required
-                        >
-                        {
-                            categories?.map((categ,index)=>
-                            {
-                                return <MenuItem key={index+'ma1'} value={categ._id}>{categ.title} - {categ.departmentId.title}</MenuItem>
-                            })
-                        }
-                        </Select>
-                    </FormControl>
                     <Box sx={{display:"flex",flexDirection:"column",columnGap:"8px",marginBottom:"12px"}}>
                         <FormLabel sx={{marginBottom:"4px"}}>Image : </FormLabel>
                         <Input required name="image" type="file" sx={{width:"100%",border:"1px solid #dde0e3",padding:"8px 5px"}}
-                        onChange={(e)=>handleChangeProduct(e)}/>
+                        onChange={(e)=>setImage(e.target.files[0])}/>
                     </Box>
-                    {product.image&&<Box sx={{height:"300px",overflow:"auto"}}><Image src={URL.createObjectURL(product.image)}/></Box>}
+                    <Box sx={{height:"300px",overflow:"auto"}}>
+                        <Image src={image?URL.createObjectURL(image):`${process.env.REACT_APP_API}images/${product.image}`}/>
+                    </Box>
                     {
                     !load?
-                    <Button variant="contained" sx={{width:"100%"}} onClick={(e)=>createProduct(e)}>Add Product</Button>
+                    <Button variant="contained" sx={{width:"100%"}} onClick={(e)=>editProduct(e)}>Edit Product</Button>
                     :
                     <Button variant="contained" sx={{width:"100%"}}>load ...</Button>
                     }

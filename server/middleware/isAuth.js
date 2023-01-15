@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-module.exports = (req,res,next)=>{
+exports.adminAuth = (req,res,next)=>{
     const token = req.get('Authorization');
     if(!token){
         const error = new Error('No Auth');
