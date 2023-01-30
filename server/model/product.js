@@ -22,7 +22,21 @@ const productSchema = new Schema({
     ],
     categoryId:{type:mongoose.Types.ObjectId,required:true,ref:"Category"},
     colors:{type:Array,required:true},
-    sizes:{type:Array,required:true}
+    sizes:{type:Array,required:true},
+    userFavourites:[
+        {
+            userId:{type:mongoose.Types.ObjectId,required:true,ref:"User"},
+        }
+    ],
+    reviews:[
+        {
+            userName:{type:String,required:true},
+            rating:{type:Number,required:true},
+            comment:{type:String,required:true},
+            date:{type:Date,required:true},
+            userId:{type:mongoose.Types.ObjectId,required:true}
+        }
+    ]
 },{timestamps:true})
 
 module.exports = mongoose.model('Product',productSchema)

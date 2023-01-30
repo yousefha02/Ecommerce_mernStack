@@ -5,14 +5,17 @@ import Layout from '../components/Layout'
 import {useSelector} from 'react-redux'
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react'
+import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function AddCategory() {
     const {closeSnackbar,enqueueSnackbar} = useSnackbar()
     const {token} = useSelector((state)=>state.admin)
-    const [title,setTitle] = useState(null)
+    const title = useRef()
     const [load,setLoad] = useState(false)
     const [departments,setDepartments] = useState([])
     const [department,setDepartment] = useState(null)
+    const navigate = useNavigate()
 
     async function createCategory(e)
     {
@@ -26,7 +29,7 @@ export default function AddCategory() {
                     "Authorization":token,
                     "Content-Type":"application/json"
                 },
-                body:JSON.stringify({title:title.toLowerCase(),departmentId:department})
+                body:JSON.stringify({title:title.current.value.toLowerCase(),departmentId:department})
             })
             const data = await response.json()
             if(response.status!==200&&response.status!==201)
@@ -36,8 +39,7 @@ export default function AddCategory() {
                 throw new Error('failed occured')
             }
             enqueueSnackbar(data.message,{variant:"success",autoHideDuration:2500})
-            setTitle('')
-            setDepartment(null)
+            navigate('/categories')
             setLoad(false)
         }
         catch(err)
@@ -73,7 +75,7 @@ export default function AddCategory() {
                 <Typography sx={{fontSize:"22px",fontWeight:"600",marginBottom:"10px"}}>Add Category</Typography>
                 <Paper sx={{padding:"16px 12px"}}>
                     <TextField label="Title" fullWidth type="text" sx={{marginBottom:"20px"}} 
-                    onChange={(e)=>setTitle(e.target.value)} value={title}/>
+                    inputRef={title}/>
                     <FormControl fullWidth sx={{marginBottom:"14px"}}>
                         <InputLabel id="demo-simple-select-label">Department</InputLabel>
                         <Select

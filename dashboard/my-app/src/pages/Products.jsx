@@ -30,6 +30,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         },
 }));
 
+const Image = styled("img")({
+    width:"55px",
+    height:"65px"
+})
+
 export default function Products() {
     const {categoryId} = useParams()
     const {token} = useSelector((state)=>state.admin)
@@ -98,11 +103,12 @@ export default function Products() {
             {!load?
             <Box sx={{maxWidth:"100%",marginTop:"30px",marginBottom:"40px"}}>
                 <Typography sx={{fontSize:"22px",fontWeight:"600",marginBottom:"15px"}}>Products</Typography>
-                <TableContainer component={Paper}>
-                    <Table aria-label="customized table">
+                <TableContainer component={Paper} sx={{overflowX:"auto"}}>
+                    <Table aria-label="customized table" sx={{minWidth:"500px"}}>
                         <TableHead>
                         <TableRow>
-                            <StyledTableCell>Name</StyledTableCell>
+                            <StyledTableCell>Title</StyledTableCell>
+                            <StyledTableCell>Image</StyledTableCell>
                             <StyledTableCell>Price</StyledTableCell>
                             <StyledTableCell>Actions</StyledTableCell>
                         </TableRow>
@@ -112,6 +118,9 @@ export default function Products() {
                             <StyledTableRow key={idnex+'pq'}>
                             <StyledTableCell component="th" scope="row">
                                 {row.title}
+                            </StyledTableCell>
+                            <StyledTableCell component="th" scope="row">
+                                <Image src={`${process.env.REACT_APP_API}images/${row.image}`}/>
                             </StyledTableCell>
                             <StyledTableCell component="th" scope="row">
                                 {row.price}

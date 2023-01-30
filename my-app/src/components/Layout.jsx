@@ -20,7 +20,7 @@ import {closeUser} from '../redux/user'
 
 const drawerWidth = 240;
 const navItems = [
-    {title:'Home',url:"/"},{title:'Shop',url:"/shop"}
+    {title:'Home',url:"/"},{title:"Favourite",url:"/favourite"},{title:"Cart",url:"/cart"},{title:'Orders',url:"/orders"}
 ];
 
 function Layout(props) {
@@ -40,9 +40,11 @@ function Layout(props) {
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+        <Link to="/">
         <Typography variant="h6" sx={{ my: 2 }}>
             Store
         </Typography>
+        </Link>
         <Divider />
         {user?
         <List>
@@ -97,13 +99,16 @@ function Layout(props) {
             >
                 <MenuIcon />
             </IconButton>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
+            <Link to="/">
             <Typography
                 variant="h6"
                 component="div"
-                sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
             >
                 Store
             </Typography>
+            </Link>
+            </Box>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                 {
                 user?   

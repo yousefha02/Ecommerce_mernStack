@@ -121,7 +121,7 @@ function ResponsiveDrawer(props) {
                     </ListItemButton>
                 </ListItem>
             </Link>
-            <Link to="">
+            <Link to="/orders">
                 <ListItem disablePadding>
                     <ListItemButton>
                     <ListItemIcon>
@@ -131,7 +131,7 @@ function ResponsiveDrawer(props) {
                     </ListItemButton>
                 </ListItem>
             </Link>
-            <Link to="">
+            <Link to="/users">
                 <ListItem disablePadding>
                     <ListItemButton>
                     <ListItemIcon>
@@ -211,7 +211,7 @@ function ResponsiveDrawer(props) {
         </Box>
         <Box
             component="main"
-            sx={{ flexGrow: 1, paddingX: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+            sx={{ flexGrow: 1, paddingX: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } , overflowX:"hidden"}}
         >
             <Toolbar />
             {props.children}

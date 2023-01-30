@@ -1,5 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import userReducer from './user'
+import shippingReducer from './shipping'
+
 import {
     persistStore,
     persistReducer,
@@ -11,14 +13,20 @@ import {
     REGISTER
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-const persistConfig = {
+const persistConfig1 = {
     key: 'root',
+    version: 1,
+    storage,
+}
+const persistConfig2 = {
+    key: 'roo2',
     version: 1,
     storage,
     }
     
     const rootReducer = combineReducers({ 
-        userLogin: persistReducer(persistConfig, userReducer),
+        userLogin: persistReducer(persistConfig1, userReducer),
+        shipping: persistReducer(persistConfig2, shippingReducer),
     })
 
 export const store = configureStore({

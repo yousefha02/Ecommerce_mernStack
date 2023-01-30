@@ -1,4 +1,6 @@
 const Category = require('../model/Category')
+const Product = require('../model/product')
+
 exports.createCategory = async(req,res,next)=>
 {
     try{

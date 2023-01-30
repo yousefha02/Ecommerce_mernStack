@@ -1,4 +1,5 @@
 const Product = require('../model/product')
+const Category = require('../model/Category')
 const fs = require('fs')
 const path = require('path')
 
@@ -57,7 +58,6 @@ exports.deleteProduct = async(req,res,next)=>
             error.statusCode = 404
             throw error
         }
-        clearImage(product.image)
         await Product.findByIdAndRemove(productId)
         res.status(200).json({message:"product has deleted"})
     }
@@ -83,7 +83,6 @@ exports.editProduct = async(req,res,next)=>
         product.sizes = sizes.split(",")
         if(req.file)
         {
-            clearImage(product.image)
             product.image = req.file.filename
         }
         await product.save()
@@ -137,8 +136,57 @@ exports.getNewProducts = async(req,res,next)=>
     }
 }
 
-const clearImage=(filePath)=>{
-    filePath=path.join(__dirname,'..',`images/${filePath}`);
+exports.getProductsByDepartment = async(req,res,next)=>
+{
+    try{
+        const {departmentId} = req.params
+        const categories = await Category.find({departmentId:departmentId})
+        let allProducts = [];
+        for(const category of categories)
+        {
+            const products = await Product.find({categoryId:category._id}).populate('categoryId')
+            allProducts.push(...products)
+        }
+        res.status(200).json({allProducts})
+    }
+    catch(err)
+    {
+        if(!err.statusCode)
+        {
+            err.statusCode = 500
+        }
+        next(err)
+    }
+}
+
+exports.addReviewToProduct = async(req,res,next)=>
+{
+    try{
+        const {productId} = req.params
+        const {comment,rating,date,userName} = req.body
+        const product = await Product.findById(productId)
+        if(!product)
+        {
+            const error = new Error('product is not found')
+            error.statusCode = 404
+            throw new error ; 
+        }
+        product.reviews.push({userName:userName,rating,comment,date,userId:req.userId})
+        await product.save()
+        res.status(201).json({message:"success review"})
+    }
+    catch(err)
+    {
+        if(!err.statusCode)
+        {
+            err.statusCode = 500
+        }
+        next(err)
+    }
+}
+
+const clearImage = (filePath)=>{
+    filePath = path.join(__dirname,'..',`images/${filePath}`);
     fs.unlink(filePath,(err)=>{
         console.log(err);
     })

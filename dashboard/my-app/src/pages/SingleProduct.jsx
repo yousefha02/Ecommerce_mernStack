@@ -38,6 +38,16 @@ export default function SingleProduct() {
         getProduct()
     },[productId])
 
+    function getRateOfProduct()
+    {
+        const numberOfReviews = product.reviews.length;
+        const rating = product.reviews.reduce((acc,value)=>
+        {
+            return acc + value.rating
+        },0)
+        return rating / numberOfReviews
+    }
+
     return (
         <Layout>
             {!load?
@@ -50,8 +60,8 @@ export default function SingleProduct() {
                     <Grid item xs={12} lg={6} xl={7}>
                         <Typography sx={{fontSize:"24px",fontWeight:"600",marginBottom:"10px"}}>{product.title}</Typography>
                         <Box sx={{display:"flex",alignItems:"center",columnGap:"6px"}}>
-                            <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{fontSize:"20px"}}/>
-                            <Typography sx={{color:"#747579",fontSize:"14px"}}>2,321 reviews</Typography>
+                            <Rating name="half-rating-read" defaultValue={getRateOfProduct} precision={0.5} readOnly sx={{fontSize:"20px"}}/>
+                            <Typography sx={{color:"#747579",fontSize:"14px"}}>{product.reviews.length} reviews</Typography>
                         </Box>
                         <Typography color="error" sx={{fontSize:"20px",margin:"10px 0px"}}>{product.price}$</Typography>
                         <Typography sx={{fontSize:"16px",margin:"10px 0px 6px",fontWeight:"400"}}>Colors</Typography>

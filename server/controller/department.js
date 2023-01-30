@@ -1,4 +1,5 @@
 const Department = require('../model/Department')
+const Category = require('../model/Category')
 
 exports.createDepartment = async(req,res,next)=>
 {
@@ -36,6 +37,30 @@ exports.getDepartments = async(req,res,next)=>
         const departments = await Department.find()
         res.status(200).json({departments})
     }
+    catch(err)
+    {
+        if(!err.statusCode)
+        {
+            err.statusCode = 500
+        }
+        next(err)
+    }  
+}
+
+exports.getTopDepartmensByCategories = async(req,res,next)=>
+{
+    try{
+        const departments = await Category.aggregate([
+            {$group:{_id:"$departmentId",count:{$sum:1}}},
+        ])
+
+        const allDepartments = await Department.find()
+        const newDepartments = departments.map((department)=>
+        {
+            return {_id:allDepartments.find(item=>item._id.toString()===department._id.toString()).title,count:department.count}
+        })
+        res.status(200).json({newDepartments})
+    }   
     catch(err)
     {
         if(!err.statusCode)

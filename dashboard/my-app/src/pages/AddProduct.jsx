@@ -7,6 +7,7 @@ import { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {useSelector} from 'react-redux'
 import { useSnackbar } from 'notistack';
+import { useRef } from 'react';
 const Input = styled("input")({})
 const Image = styled('img')({
     width:"100%",
@@ -54,7 +55,9 @@ export default function AddProduct() {
     const [categories,setCategories] = useState([])
     const names = ['Red','Blue','Green','Yellow','Black','White','Brown','Gray','Pink','Orange'];
     const [sizes,setSizes] = useState([])
-    const [product,setProduct] = useState({image:"",price:"",title:"",categoryId:""})
+    const [product,setProduct] = useState({image:"",categoryId:""})
+    const price = useRef()
+    const title = useRef()
 
     const handleChangeProduct = (e)=>
     {
@@ -102,8 +105,8 @@ export default function AddProduct() {
         e.preventDefault()
         const formData = new FormData()
         formData.append('image',product.image)
-        formData.append('title',product.title)
-        formData.append('price',product.price)
+        formData.append('title',title.current.value)
+        formData.append('price',price.current.value)
         formData.append('colors',colors)
         formData.append('categoryId',product.categoryId)
         formData.append('sizes',sizes)
@@ -138,9 +141,9 @@ export default function AddProduct() {
                 <Typography sx={{fontSize:"22px",fontWeight:"600",marginBottom:"10px"}}>Add Product</Typography>
                 <Paper sx={{padding:"16px 12px"}}>
                     <TextField label="Title" fullWidth type="text" sx={{marginBottom:"20px"}} name="title"
-                    onChange={(e)=>handleChangeProduct(e)} required/>
+                    inputRef={title} required/>
                     <TextField label="Price" fullWidth type="number" sx={{marginBottom:"20px"}} name="price"
-                    onChange={(e)=>handleChangeProduct(e)} required/>
+                    inputRef={price} required/>
                     <FormControl sx={{marginBottom:"14px"}} fullWidth>
                         <InputLabel id="demo-multiple-chip-label">Color</InputLabel>
                         <Select

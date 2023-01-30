@@ -12,12 +12,19 @@ import Categories from './pages/Categories';
 import Products from './pages/Products';
 import SingleProduct from './pages/SingleProduct';
 import EditProduct from './pages/EditProduct';
+import Orders from './pages/Orders';
+import SingleOrder from './pages/SingleOrder';
+import Users from './pages/Users';
 
 const theme = createTheme({
   palette:{
     primary:{
       main:"#ff5252",
       contrastText:"white"
+    },
+    Black:{
+      main:"#24292d",
+      contrastText:"#fff"
     }
   }
 })
@@ -38,6 +45,9 @@ function App() {
           <Route path="departments/:departmentId/categories" element={currentAdmin?<Categories/>:<Navigate to="/login"/>}/>
           <Route path="products" element={currentAdmin?<Products/>:<Navigate to="/login"/>}/>
           <Route path="product/:productId" element={currentAdmin?<SingleProduct/>:<Navigate to="/login"/>}/>
+          <Route path="orders" element={currentAdmin?<Orders/>:<Navigate to="/login"/>}/>
+          <Route path="users" element={currentAdmin?<Users/>:<Navigate to="/login"/>}/>
+          <Route path="orders/:orderId" element={currentAdmin?<SingleOrder/>:<Navigate to="/login"/>}/>
           <Route path="edit-product/:productId" element={currentAdmin?<EditProduct/>:<Navigate to="/login"/>}/>
           <Route path="categories/:categoryId/products" element={currentAdmin?<Products/>:<Navigate to="/login"/>}/>
         </Routes>

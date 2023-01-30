@@ -8,7 +8,9 @@ const userSchema = new Schema({
     cart:[
         {
             productId:{type:mongoose.Types.ObjectId,required:true,ref:"Product"},
-            qty:{type:Number,required:true}
+            qty:{type:Number,required:true},
+            color:{type:String,required:true},
+            size:{type:String,required:true}
         }
     ],
     favourites:[

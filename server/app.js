@@ -41,6 +41,18 @@ app.use('/department',department)
 const category = require('./routes/category')
 app.use('/category',category)
 
+const favourite = require('./routes/favourite')
+app.use('/favourite',favourite)
+
+const user = require('./routes/user')
+app.use('/user',user)
+
+const cart = require('./routes/cart')
+app.use('/cart',cart)
+
+const order = require('./routes/order')
+app.use('/order',order)
+
 app.use((error,req,res,next)=>
 {
     console.log(error);
